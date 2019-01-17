@@ -30,9 +30,9 @@ All documentation is available on the [Terraform website](http://www.terraform.i
   - [Intro](https://www.terraform.io/intro/index.html)
   - [Docs](https://www.terraform.io/docs/index.html)
 
-# AWS VDF DE ETO Terraform
+# AWS Terraform
 
-## This project is maintained by Celfocus Environments Team.
+## This project is maintained by Hugo Silva.
 
 ```hcl
 
@@ -46,11 +46,11 @@ Default region name [None]: region in use
 Default output format [None]: nothing
 
 Change ~/.aws/config
-[profile Auto_CelFocus]
+[profile Auto_*******]
 region = eu-central-1
 
 Change ~/.aws/credentials
-[Auto_CelFocus]
+[Auto_*******]
 aws_access_key_id = "ID from file"
 aws_secret_access_key = "key from file"
 
