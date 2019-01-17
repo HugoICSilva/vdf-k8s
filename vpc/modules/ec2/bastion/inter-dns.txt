@@ -1,0 +1,78 @@
+#!/bin/bash
+
+
+## msemuser user + key
+adduser msemuser -p "X?qMO5tFFmf0{(K'!&27GP;n"
+echo "msemuser ALL=(ALL)	ALL" >> /etc/sudoers
+
+mkdir -p /home/msemuser/.ssh
+cat <<FILE > /home/msemuser/.ssh/authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAvljykjzZlaSw1u4f/RagWKyYqG6xsSECqIruAg8yYSuGXldjkf9HbSm2N/2kN7uTNEDaoT4UCuhfpEsKfm2DPBXTVmV/Ldh2nXesKsZMquVfvbSII7LRQhW4v2g2wf1KJ4KlmN0QeFmbAumVbLQdaEazCx6A1NHvr6uiSPJDOaWhHaXVTCF4pnUTvcdKCoIPJ4QgwcKBGiy6YZEra3d589ND4U+iSXPcIyQlRXu9e/lFwxI7L7ijDsJ913Wi6HE/X9Gks9BKw+BqQ//D5b7COjJ6l8h1I9MP8Qos/Ts5f+Ql+x04wjduInevDk+BL6Tec+N/s20rjD+7DGl0kwKB7Q==
+FILE
+
+chown -R msemuser.msemuser /home/msemuser/.ssh/
+chmod 400 /home/msemuser/.ssh/authorized_keys
+
+
+
+## install bind
+
+sudo yum update -y
+sudo yum install -y bind
+sudo systemctl enable named
+
+sudo cat <<FILE > /etc/named.conf
+// named.conf
+
+acl PermittedHosts{
+localhost;
+127.0.0.1;
+192.168.90.169/32;
+172.16.0.0/22;
+10.233.104.0/24;
+};
+
+options {
+        directory       "/var/named";
+        dump-file       "/var/named/data/cache_dump.db";
+        statistics-file "/var/named/data/named_stats.txt";
+        memstatistics-file "/var/named/data/named_mem_stats.txt";
+        allow-query     { PermittedHosts; };
+        allow-recursion { PermittedHosts; };
+
+        forwarders { 10.233.104.2; };
+        forward only;
+
+        dnssec-enable no;
+        dnssec-validation no;
+
+        /* Path to ISC DLV key */
+        bindkeys-file "/etc/named.iscdlv.key";
+
+        managed-keys-directory "/var/named/dynamic";
+
+        pid-file "/run/named/named.pid";
+        session-keyfile "/run/named/session.key";
+};
+
+logging {
+        channel default_debug {
+                file "data/named.run";
+                severity dynamic;
+        };
+};
+
+zone "." IN {
+        type hint;
+        file "named.ca";
+};
+
+include "/etc/named.rfc1912.zones";
+include "/etc/named.root.key";
+
+FILE
+
+sudo systemctl restart named
+
+##################################################################
+
