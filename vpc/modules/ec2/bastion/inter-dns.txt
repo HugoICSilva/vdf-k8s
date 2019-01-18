@@ -27,7 +27,7 @@ sudo cat <<FILE > /etc/named.conf
 acl PermittedHosts{
 localhost;
 127.0.0.1;
-192.168.90.169/32;
+192.168.90.111/32;
 172.16.0.0/22;
 10.233.104.0/24;
 };
