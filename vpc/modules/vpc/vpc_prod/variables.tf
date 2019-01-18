@@ -43,7 +43,8 @@ variable "cidrs" {
   }
 }
 
-
+auth_lista = [ "0.0.0.0/0"] #cant put here my ip list
+auth_lista2 = ["0.0.0.0/0"] #cant put here my ip list
 
 variable "chave" {
   default = "VDF-DE-TEST"
@@ -56,10 +57,7 @@ variable "null_list" {
 variable "vpc_list" {
   type = "list"
 
-  default = ["10.233.105.0/26",
-    "192.168.90.169/32",
-    "172.16.0.0/22",
-  ]
+  default = ["0.0.0.0/0"] #cant put here my ip list
 }
 
 ##-----------> Compute modules

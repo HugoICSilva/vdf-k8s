@@ -24,6 +24,14 @@ cidrs         = {
  priv_worker7 = "10.233.104.177/28"
  }
 
+auth_lista = [ "0.0.0.0/0"] #cant put here my ip list
+
+auth_lista2 = ["0.0.0.0/0"] #cant put here my ip list
+
+			  
+chave = "VDF-DE-TEST"
+null_list = "0.0.0.0/0"
+vpc_list = ["0.0.0.0/0"] #cant put here my ip list
 
 			  
 ##----------------------------> Compute
