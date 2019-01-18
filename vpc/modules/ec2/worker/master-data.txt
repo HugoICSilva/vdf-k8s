@@ -62,9 +62,8 @@ sudo mount -a
 ##---------> instalações <----------
 sleep 5
 
-#sudo export DOCKERURL='https://storebits.docker.com/ee/centos/sub-2bddeab7-db92-4fdf-8637-18166a49644d'
+export DOCKERURL='https://storebits.docker.com/ee/centos/sub-2bddeab7-db92-4fdf-8637-18166a49644d'
 #UCP_HOSTNAME=$(curl http://169.254.169.254/latest/meta-data/hostname)
-export DOCKERURL='https://storebits.docker.com/ee/rhel/sub-f7442f73-7c38-4cf8-890a-0773ca466d69'
 export UCP_HOSTNAME='www.ucp.tooling.com'
 export DTR_HOSTNAME='www.dtr.tooling.com'
 export NODE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
