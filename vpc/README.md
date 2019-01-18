@@ -67,8 +67,8 @@ The final step is to make sure that the terraform binary is available on the PAT
 
 Terraform main.tf which creates VPC resources on AWS.
 
-![Optional Text](../Design/VDF-TEST_10v8.jpg)
 
+![alt text](Design/VDF-TEST_10v8.jpg "AWS Architecture")
 
 These resources are created:
 
