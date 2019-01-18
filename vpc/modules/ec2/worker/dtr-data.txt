@@ -59,8 +59,7 @@ sudo mount -a
 
 ##---------> instalações <----------
 
-#sudo export DOCKERURL='https://storebits.docker.com/ee/centos/sub-2bddeab7-db92-4fdf-8637-18166a49644d'
-export DOCKERURL='https://storebits.docker.com/ee/rhel/sub-f7442f73-7c38-4cf8-890a-0773ca466d69'
+export DOCKERURL='https://storebits.docker.com/ee/centos/sub-2bddeab7-db92-4fdf-8637-18166a49644d'
 export UCP_HOSTNAME='www.ucp.tooling.com'
 export DTR_HOSTNAME='www.dtr.tooling.com'
 
