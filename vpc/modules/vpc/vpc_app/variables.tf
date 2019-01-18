@@ -26,25 +26,7 @@ variable "cidrs" {
   }
 }
 
-variable "auth_lista" {
-  type = "list"
 
-  default = ["213.30.18.1/32", "85.246.181.205/32",
-    "10.20.32.0/19",
-    "88.157.199.114/32",
-    "192.168.90.169/32",
-    "172.16.0.0/22",
-  ]
-}
-
-variable "auth_lista2" {
-  type = "list"
-
-  default = ["213.30.18.1/32", "85.246.181.205/32",
-    "10.20.32.0/19",
-    "10.0.0.0/16",
-  ]
-}
 
 variable "chave" {
   default = "VDF-DE-TEST"
