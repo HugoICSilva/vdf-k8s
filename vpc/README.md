@@ -64,6 +64,39 @@ can be safely removed and Terraform will still function.
 
 The final step is to make sure that the terraform binary is available on the PATH(export PATH=$PATH:/path/to/dir).
 
+##AWS Account
+
+- enterprise-cloud-test
+  - Tooling VPC
+  - NO-PROD VPC
+
+- enterprise-cloud-prod
+  - PROD VPC
+ 
+
+###What will be publish throw the Internet Gateway?
+
+In this case we will have productive and no-productive environment publish.
+
+For PROD we will have Root53, Shild and WAF, that will give us the security layer.
+
+For NO-PROD we will have also ROOT53, Shild, WAF and a White List for operations access (the no-prod will be below an whitelist).
+
+ 
+
+###What connectivity’s we will have between Tooling VPC and PROD VPC?
+
+- Connectivity from the PROD Docker DTR to the tooling Docker DTR (unidirectional)
+- Connectivity from the Bastion (SSH) that is located on tooling VPC (in a DMZ isolated from the tooling and NOPROD environment), to the PROD kubernetes Managers and workers (this access it’s important for the Operation Team)
+- Connectivity from the Bastion (HTTPS) that is located on tooling VPC (in a DMZ isolated from the tooling and NOPROD environment), to the PROD kubernetes Managers dashboard.
+ 
+
+###Isolation between Layers on enterprise-cloud-test account
+
+The Kubernetes Workers from tooling, monitoring and NO-PROD layers can not communicate between them.
+
+But we will have a bidirectional communication between the managers nodes and all workers.
+
 
 Terraform main.tf which creates VPC resources on AWS.
 
@@ -111,7 +144,8 @@ These resources are created:
 ## Modules started
 
 ```hcl
-.
++-- Design
+¦   +-- VDF-TEST_10v8.jpg
 +-- README.md
 +-- main.tf
 +-- modules
@@ -124,7 +158,8 @@ These resources are created:
 ¦   ¦   +-- bastion
 ¦   ¦   ¦   +-- ec2_bastion.tf
 ¦   ¦   ¦   +-- inter-dns.txt
-¦   ¦   ¦   +-- user-bast-data.txt
+¦   ¦   ¦   +-- user-bastDmz-data.txt
+¦   ¦   ¦   +-- user-bastProd-data.txt
 ¦   ¦   ¦   +-- variables.tf
 ¦   ¦   +-- worker
 ¦   ¦       +-- docker_worker.tf
@@ -143,13 +178,13 @@ These resources are created:
 ¦   ¦       +-- output.elb.tf
 ¦   ¦       +-- variables.tf
 ¦   +-- peer
-¦   ¦   +-- acc
-¦   ¦   ¦   +-- acc.tf
-¦   ¦   ¦   +-- outputs_acc.tf
+¦   ¦   +-- cross
+¦   ¦   ¦   +-- cross.tf
+¦   ¦   ¦   +-- outputs_cross.tf
 ¦   ¦   ¦   +-- variable.tf
-¦   ¦   +-- req
-¦   ¦       +-- outputs_req.tf
-¦   ¦       +-- req.tf
+¦   ¦   +-- inter
+¦   ¦       +-- inter.tf
+¦   ¦       +-- outputs_inter.tf
 ¦   ¦       +-- variable.tf
 ¦   +-- route53
 ¦   ¦   +-- routeBASE
@@ -175,14 +210,9 @@ These resources are created:
 ¦           +-- terraform.tfvars
 ¦           +-- variables.tf
 +-- outputs.tf
-+-- terraform.tfstate
-+-- terraform.tfstate.backup
 +-- terraform.tfvars
 +-- variables.tf
-
-20 directories, 47 files
-```
-
+21 directories, 47 files
 
 ## Environments Var's
 
