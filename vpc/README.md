@@ -64,7 +64,7 @@ can be safely removed and Terraform will still function.
 
 The final step is to make sure that the terraform binary is available on the PATH(export PATH=$PATH:/path/to/dir).
 
-##AWS Account
+## AWS Account
 
 - enterprise-cloud-test
   - Tooling VPC
@@ -74,7 +74,7 @@ The final step is to make sure that the terraform binary is available on the PAT
   - PROD VPC
  
 
-###What will be publish throw the Internet Gateway?
+### What will be publish throw the Internet Gateway?
 
 In this case we will have productive and no-productive environment publish.
 
@@ -84,14 +84,14 @@ For NO-PROD we will have also ROOT53, Shild, WAF and a White List for operations
 
  
 
-###What connectivity’s we will have between Tooling VPC and PROD VPC?
+### What connectivity’s we will have between Tooling VPC and PROD VPC?
 
 - Connectivity from the PROD Docker DTR to the tooling Docker DTR (unidirectional)
 - Connectivity from the Bastion (SSH) that is located on tooling VPC (in a DMZ isolated from the tooling and NOPROD environment), to the PROD kubernetes Managers and workers (this access it’s important for the Operation Team)
 - Connectivity from the Bastion (HTTPS) that is located on tooling VPC (in a DMZ isolated from the tooling and NOPROD environment), to the PROD kubernetes Managers dashboard.
  
 
-###Isolation between Layers on enterprise-cloud-test account
+### Isolation between Layers on enterprise-cloud-test account
 
 The Kubernetes Workers from tooling, monitoring and NO-PROD layers can not communicate between them.
 
