@@ -6,7 +6,6 @@ provider "aws" {}
 #  region  = "${var.aws_region}"
 #  profile = "${var.aws_profile}"
 
-
 #------------------ VPC ---------------------
 
 resource "aws_vpc" "prod_vpc" {
@@ -187,7 +186,6 @@ resource "aws_route_table_association" "private_assoc" {
 ##Security groups
 ##
 
-
 #---------> Public SG ELB1
 
 resource "aws_security_group" "prod_elb1_sg" {
@@ -350,8 +348,8 @@ module "peer-vpc-prod" {
 }
 
 */
-  provider "aws" {
+provider "aws" {
   alias   = "peer"
   region  = "${var.aws_region1}"
   profile = "${var.aws_profile1}"
- }
+}

@@ -1,12 +1,10 @@
-
 # Requester's side of the connection.
 resource "aws_vpc_peering_connection" "peer" {
-
   vpc_id        = "${var.vpc_id}"
   peer_vpc_id   = "${var.peer_vpc_id}"
   peer_owner_id = "${var.peer_owner_id}"
   auto_accept   = "${var.auto_accept_req}"
- 
+
   tags = {
     SideR = "Requester"
   }
@@ -20,7 +18,7 @@ resource "aws_vpc_peering_connection_accepter" "peer" {
 
   vpc_peering_connection_id = "${aws_vpc_peering_connection.peer.id}"
   auto_accept               = "${var.auto_accept_acc}"
-  
+
   tags = {
     SideA = "Accepter"
   }
@@ -39,5 +37,3 @@ resource "aws_vpc_peering_connection_options" "requester" {
     allow_remote_vpc_dns_resolution = true
   }
 }
-
-

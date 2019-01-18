@@ -8,14 +8,14 @@ output "vpc_id" {
 }
 
 ##------------> subenets
-output "subnet_pub1_ids" {
+output "subnet_privDMZ_ids" {
   description = "Public1 SubNet ID"
-  value       = "${aws_subnet.dmz_public1_subnet.id}"
+  value       = "${aws_subnet.dmz_privDMZ_subnet.id}"
 }
 
-output "subnet_pub2_ids" {
+output "subnet_pub1_ids" {
   description = "Public2 SubNet ID"
-  value       = "${aws_subnet.dmz_public2_subnet.id}"
+  value       = "${aws_subnet.dmz_public1_subnet.id}"
 }
 
 ##----------------> id da zona R53
@@ -72,7 +72,6 @@ output "prod_private_rt" {
 }
 
 ##-------------> test peer
-
 
 output "vpc_peer_app_id" {
   description = "VPC peer conection toolin to test ID"

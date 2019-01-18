@@ -1,5 +1,3 @@
-
-
 variable "peer_owner_id" {
   description = " VPC AWS ID Owner"
   type        = "string"
@@ -14,7 +12,6 @@ variable "vpc_id" {
   description = " Main VPC ID"
   type        = "string"
 }
-
 
 variable "auto_accept_req" {
   description = " Main VPC ID"
@@ -42,3 +39,4 @@ variable "auto_accept_acc" {
   type        = "string"
 }
 */
+

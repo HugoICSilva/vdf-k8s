@@ -18,8 +18,6 @@ variable "aws_profile1" {
   description = "aws used profile"
 }
 
-
-
 data "aws_availability_zones" "available" {}
 
 variable "vpc_cidr" {
@@ -36,12 +34,12 @@ variable "cidrs" {
 }
 
 variable "auth_lista" {
-  description = "1º Ip WhitList"
+  description = "1 Ip WhitList"
   type        = "list"
 }
 
 variable "auth_lista2" {
-  description = "2º Ip WhitList"
+  description = "2 Ip WhitList"
   type        = "list"
 }
 

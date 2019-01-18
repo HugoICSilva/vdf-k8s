@@ -1,5 +1,3 @@
-
-
 # Requester's side of the connection.
 resource "aws_vpc_peering_connection" "peer" {
   provider = "aws"

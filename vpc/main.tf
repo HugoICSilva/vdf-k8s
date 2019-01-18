@@ -12,7 +12,6 @@
 provider "aws" {
   region  = "${var.aws_region}"
   profile = "${var.aws_profile}"
-
 }
 
 provider "aws" {
@@ -40,6 +39,7 @@ resource "aws_vpc" "dmz_vpc" {
   }
 }
 
+#------------> Atache vpn to vpc
 resource "aws_vpn_gateway_attachment" "vpn_attachment" {
   vpc_id         = "${aws_vpc.dmz_vpc.id}"
   vpn_gateway_id = "${var.cf_vpc}"
@@ -64,31 +64,59 @@ resource "aws_eip" "dmz_nat_eip" {
 #-------------> The NAT gateway
 resource "aws_nat_gateway" "nat" {
   allocation_id = "${aws_eip.dmz_nat_eip.id}"
-  subnet_id     = "${aws_subnet.dmz_public2_subnet.id}"
+  subnet_id     = "${aws_subnet.dmz_public1_subnet.id}"
 }
 
 #############
 # Route tables
 ##
+
 resource "aws_route_table" "dmz_public_rt" {
-  vpc_id           = "${aws_vpc.dmz_vpc.id}"
-  propagating_vgws = ["${var.cf_vpc}"]
+  vpc_id = "${aws_vpc.dmz_vpc.id}"
+
+  #  propagating_vgws = ["${var.cf_vpc}"]
 
   route {
     cidr_block = "${var.null_list}"
     gateway_id = "${aws_internet_gateway.dmz_internet_gateway.id}"
   }
 
- # route {
- #   cidr_block                = "${var.app_cidr}"
- #   vpc_peering_connection_id = "${module.peer_vpc_req.primary2secondary_req}"
- # }
+  # route {
+  #   cidr_block                = "${var.app_cidr}"
+  #   vpc_peering_connection_id = "${module.peer_vpc_req.primary2secondary_req}"
+  # }
 
   tags {
     Name = "dmz_public"
   }
 }
 
+#-------------> Bastion/DNS RT
+resource "aws_route_table" "dmz_priv_rt" {
+  vpc_id           = "${aws_vpc.dmz_vpc.id}"
+  propagating_vgws = ["${var.cf_vpc}"]
+
+  route {
+    cidr_block     = "${var.null_list}"
+    nat_gateway_id = "${aws_nat_gateway.nat.id}"
+  }
+
+  route {
+    cidr_block                = "${var.app_cidr}"
+    vpc_peering_connection_id = "${module.peer-vpc-app.vpc_peer}"
+  }
+
+  route {
+    cidr_block                = "${var.prod_cidr}"
+    vpc_peering_connection_id = "${module.peer-vpc-prod.vpc_peer}"
+  }
+
+  tags {
+    Name = "dmz_private2"
+  }
+}
+
+#-------------> Default private RT
 resource "aws_default_route_table" "dmz_private_rt" {
   default_route_table_id = "${aws_vpc.dmz_vpc.default_route_table_id}"
   propagating_vgws       = ["${var.cf_vpc}"]
@@ -98,10 +126,10 @@ resource "aws_default_route_table" "dmz_private_rt" {
     nat_gateway_id = "${aws_nat_gateway.nat.id}"
   }
 
- # route {
- #   cidr_block                = "${var.app_cidr}"
- #   vpc_peering_connection_id = "${module.peer_vpc_req.primary2secondary_req}"
- # }
+  route {
+    cidr_block                = "${var.app_cidr}"
+    vpc_peering_connection_id = "${module.peer-vpc-app.vpc_peer}"
+  }
 
   tags {
     Name = "dmz_private"
@@ -115,23 +143,34 @@ resource "aws_subnet" "dmz_public1_subnet" {
   vpc_id                  = "${aws_vpc.dmz_vpc.id}"
   cidr_block              = "${var.cidrs["public1"]}"
   map_public_ip_on_launch = true
-  availability_zone       = "${data.aws_availability_zones.available.names[0]}"
+  availability_zone       = "${data.aws_availability_zones.available.names[1]}"
 
   tags {
     Name = "dmz_public1"
   }
 }
 
-resource "aws_subnet" "dmz_public2_subnet" {
+resource "aws_subnet" "dmz_privDMZ_subnet" {
   vpc_id                  = "${aws_vpc.dmz_vpc.id}"
-  cidr_block              = "${var.cidrs["public2"]}"
+  cidr_block              = "${var.cidrs["priv_dmz"]}"
   map_public_ip_on_launch = true
-  availability_zone       = "${data.aws_availability_zones.available.names[1]}"
+  availability_zone       = "${data.aws_availability_zones.available.names[0]}"
 
   tags {
     Name = "dmz_public2"
   }
 }
+
+#resource "aws_subnet" "priv_master1_subnet" {
+#  vpc_id                  = "${aws_vpc.dmz_vpc.id}"
+#  cidr_block              = "${var.cidrs["priv_master1"]}"
+#  map_public_ip_on_launch = false
+#  availability_zone       = "${data.aws_availability_zones.available.names[0]}"
+
+#  tags {
+#    Name = "priv_master1"
+#  }
+#}
 
 resource "aws_subnet" "priv_master1_subnet" {
   vpc_id                  = "${aws_vpc.dmz_vpc.id}"
@@ -199,6 +238,50 @@ resource "aws_subnet" "priv_worker3_subnet" {
   }
 }
 
+resource "aws_subnet" "priv_worker4_subnet" {
+  vpc_id                  = "${aws_vpc.dmz_vpc.id}"
+  cidr_block              = "${var.cidrs["priv_worker4"]}"
+  map_public_ip_on_launch = false
+  availability_zone       = "${data.aws_availability_zones.available.names[0]}"
+
+  tags {
+    Name = "priv_worker4"
+  }
+}
+
+resource "aws_subnet" "priv_worker5_subnet" {
+  vpc_id                  = "${aws_vpc.dmz_vpc.id}"
+  cidr_block              = "${var.cidrs["priv_worker5"]}"
+  map_public_ip_on_launch = false
+  availability_zone       = "${data.aws_availability_zones.available.names[1]}"
+
+  tags {
+    Name = "priv_worker5"
+  }
+}
+
+resource "aws_subnet" "priv_worker6_subnet" {
+  vpc_id                  = "${aws_vpc.dmz_vpc.id}"
+  cidr_block              = "${var.cidrs["priv_worker6"]}"
+  map_public_ip_on_launch = false
+  availability_zone       = "${data.aws_availability_zones.available.names[0]}"
+
+  tags {
+    Name = "priv_worker6"
+  }
+}
+
+resource "aws_subnet" "priv_worker7_subnet" {
+  vpc_id                  = "${aws_vpc.dmz_vpc.id}"
+  cidr_block              = "${var.cidrs["priv_worker7"]}"
+  map_public_ip_on_launch = false
+  availability_zone       = "${data.aws_availability_zones.available.names[1]}"
+
+  tags {
+    Name = "priv_worker7"
+  }
+}
+
 ##############
 #RT Associations
 ##
@@ -207,9 +290,9 @@ resource "aws_route_table_association" "public1_assoc" {
   route_table_id = "${aws_route_table.dmz_public_rt.id}"
 }
 
-resource "aws_route_table_association" "public2_assoc" {
-  subnet_id      = "${aws_subnet.dmz_public2_subnet.id}"
-  route_table_id = "${aws_route_table.dmz_public_rt.id}"
+resource "aws_route_table_association" "privdmz_assoc" {
+  subnet_id      = "${aws_subnet.dmz_privDMZ_subnet.id}"
+  route_table_id = "${aws_route_table.dmz_priv_rt.id}"
 }
 
 resource "aws_route_table_association" "private_assoc" {
@@ -344,26 +427,44 @@ resource "aws_security_group" "dmz_cluster_sg" {
 ## Bastion
 #
 
-module "bastion" {
+module "bastion_dmz" {
   source = "modules/ec2/bastion/"
 
-  instance_name         = "bastion"
+  instance_name         = "bastion_dmz"
   chave                 = "${var.chave}"
   bastion_ami           = "${var.bastion_ami}"
   instance_type_bastion = "${var.instance_type_bastion}"
   security_group        = "${aws_security_group.dmz_bastion_sg.id}"
   availability_zone     = "${data.aws_availability_zones.available.names[0]}"
-  subnet_id             = "${aws_subnet.dmz_public1_subnet.id}"
-  private_ip            = "${var.privIPs["bastion"]}"
-  txt                   = "modules/ec2/bastion/user-bast-data.txt"
+  subnet_id             = "${aws_subnet.dmz_privDMZ_subnet.id}"
+  private_ip            = "${var.privIPs["bastion_dmz"]}"
+  txt                   = "modules/ec2/bastion/user-bastDmz-data.txt"
   public_ip             = "false"
-  ambiente              = "tool"
+  ambiente              = "test"
+}
+
+#-------------------> Bastion prod
+
+module "bastion_prod" {
+  source = "modules/ec2/bastion/"
+
+  instance_name         = "bastion_prod"
+  chave                 = "${var.chave}"
+  bastion_ami           = "${var.bastion_ami}"
+  instance_type_bastion = "${var.instance_type_bastion}"
+  security_group        = "${aws_security_group.dmz_bastion_sg.id}"
+  availability_zone     = "${data.aws_availability_zones.available.names[0]}"
+  subnet_id             = "${aws_subnet.dmz_privDMZ_subnet.id}"
+  private_ip            = "${var.privIPs["bastion_prod"]}"
+  txt                   = "modules/ec2/bastion/user-bastProd-data.txt"
+  public_ip             = "false"
+  ambiente              = "prod"
 }
 
 ##########
 ## DNS
 #
-module "DNS" {
+module "AUTOMATION" {
   source = "modules/ec2/bastion/"
 
   instance_name         = "automation"
@@ -372,7 +473,7 @@ module "DNS" {
   instance_type_bastion = "${var.instance_type_bastion}"
   security_group        = "${aws_security_group.dmz_master_sg.id}"
   availability_zone     = "${data.aws_availability_zones.available.names[0]}"
-  subnet_id             = "${aws_subnet.priv_master1_subnet.id}"
+  subnet_id             = "${aws_subnet.dmz_privDMZ_subnet.id}"
   private_ip            = "${var.privIPs["dns"]}"
   txt                   = "modules/ec2/bastion/inter-dns.txt"
   public_ip             = "false"
@@ -501,7 +602,7 @@ module "worker01" {
   availability_zone     = "${data.aws_availability_zones.available.names[0]}"
   subnet_id             = "${aws_subnet.priv_worker1_subnet.id}"
   private_ip            = "${var.privIPs["worker01"]}"
-  ambiente              = "dmz"
+  ambiente              = "tool"
   txt                   = "modules/ec2/worker/worker-data.txt"
 
   # public_ip_address     = "tool"
@@ -536,6 +637,74 @@ module "worker03" {
   subnet_id             = "${aws_subnet.priv_worker3_subnet.id}"
   private_ip            = "${var.privIPs["worker03"]}"
   ambiente              = "tool"
+  txt                   = "modules/ec2/worker/worker-data.txt"
+
+  # public_ip_address     = "false"
+}
+
+#----------------- WORKER04 ------------------->
+module "worker04" {
+  source = "modules/ec2/worker/"
+
+  instance_name         = "worker04"
+  chave                 = "${var.chave}"
+  instance_type_bastion = "${var.instance_type_worker}"
+  security_group        = "${aws_security_group.dmz_cluster_sg.id}"
+  availability_zone     = "${data.aws_availability_zones.available.names[0]}"
+  subnet_id             = "${aws_subnet.priv_worker4_subnet.id}"
+  private_ip            = "${var.privIPs["worker04"]}"
+  ambiente              = "monotoring_dev"
+  txt                   = "modules/ec2/worker/worker-data.txt"
+
+  # public_ip_address     = "false"
+}
+
+#----------------- WORKER05 ------------------->
+module "worker05" {
+  source = "modules/ec2/worker/"
+
+  instance_name         = "worker05"
+  chave                 = "${var.chave}"
+  instance_type_bastion = "${var.instance_type_worker}"
+  security_group        = "${aws_security_group.dmz_cluster_sg.id}"
+  availability_zone     = "${data.aws_availability_zones.available.names[1]}"
+  subnet_id             = "${aws_subnet.priv_worker5_subnet.id}"
+  private_ip            = "${var.privIPs["worker05"]}"
+  ambiente              = "monotoring_dev"
+  txt                   = "modules/ec2/worker/worker-data.txt"
+
+  # public_ip_address     = "false"
+}
+
+#----------------- WORKER06 ------------------->
+module "worker06" {
+  source = "modules/ec2/worker/"
+
+  instance_name         = "worker06"
+  chave                 = "${var.chave}"
+  instance_type_bastion = "${var.instance_type_worker}"
+  security_group        = "${aws_security_group.dmz_cluster_sg.id}"
+  availability_zone     = "${data.aws_availability_zones.available.names[0]}"
+  subnet_id             = "${aws_subnet.priv_worker6_subnet.id}"
+  private_ip            = "${var.privIPs["worker06"]}"
+  ambiente              = "monotoring_prod"
+  txt                   = "modules/ec2/worker/worker-data.txt"
+
+  # public_ip_address     = "false"
+}
+
+#----------------- WORKER07 ------------------->
+module "worker07" {
+  source = "modules/ec2/worker/"
+
+  instance_name         = "worker07"
+  chave                 = "${var.chave}"
+  instance_type_bastion = "${var.instance_type_worker}"
+  security_group        = "${aws_security_group.dmz_cluster_sg.id}"
+  availability_zone     = "${data.aws_availability_zones.available.names[1]}"
+  subnet_id             = "${aws_subnet.priv_worker7_subnet.id}"
+  private_ip            = "${var.privIPs["worker07"]}"
+  ambiente              = "monotoring_prod"
   txt                   = "modules/ec2/worker/worker-data.txt"
 
   # public_ip_address     = "false"
@@ -589,9 +758,10 @@ module "route53" {
 ## VPC
 #
 module "app-vpc" {
-  source   = "modules/vpc/vpc_app"
-#  app_cidr = "${var.vpc_cidr}"
-#  peer_rt  = "${module.peer-vpc-app.primary2secondary_req}"
+  source = "modules/vpc/vpc_app"
+
+  #  app_cidr = "${var.vpc_cidr}"
+  #  peer_rt  = "${module.peer-vpc-app.primary2secondary_req}"
 
   # depends_on = ["${aws_vpc.dmz_vpc.id}"]
 }
@@ -600,65 +770,63 @@ module "app-vpc" {
 
 module "prod-vpc" {
   source = "modules/vpc/vpc_prod"
-  
+
   providers = {
     aws = "aws.accepter"
   }
-	  #peer_rt  = "${module.peer-vpc-prod.primary2secondary_req}"
-  
+
+  #peer_rt  = "${module.peer-vpc-prod.primary2secondary_req}"
+
   # depends_on = ["${aws_vpc.dmz_vpc.id}"]
 }
-
 
 #############
 ##Peering 
 #
- 
+
 data "aws_caller_identity" "prod" {
   provider = "aws.accepter"
- }
- 
+}
+
 module "peer-vpc-prod" {
-  source = "modules/peer/cross/" 
-  
-   providers = {
+  source = "modules/peer/cross/"
+
+  providers = {
     aws.accepter = "aws.accepter"
-    aws = "aws"
+    aws          = "aws"
   }
-  
+
   # requester
-  vpc_id        = "${aws_vpc.dmz_vpc.id}"
-  peer_vpc_id   = "${module.prod-vpc.vpc_prod_id}"
-  peer_owner_id = "${data.aws_caller_identity.prod.account_id}"
-  auto_accept_req   = "false"
+  vpc_id          = "${aws_vpc.dmz_vpc.id}"
+  peer_vpc_id     = "${module.prod-vpc.vpc_prod_id}"
+  peer_owner_id   = "${data.aws_caller_identity.prod.account_id}"
+  auto_accept_req = "false"
 
   #Accepter
-  auto_accept_acc   = "true"
-
+  auto_accept_acc = "true"
 }
 
 #----------- app vpc peer --------->
 
 data "aws_caller_identity" "app" {
   provider = "aws"
- }
- 
-module "peer-vpc-app" {
-  source = "modules/peer/inter/" 
-  
-   providers = {
-    aws = "aws"
-  }
- 
-  # requester
-  vpc_id            = "${aws_vpc.dmz_vpc.id}"
-  peer_vpc_id       = "${module.app-vpc.vpc_app_id}"
-  peer_owner_id     = "${data.aws_caller_identity.app.account_id}"
-  auto_accept_req   = "true"
-
-  #Accepter
-  auto_accept_acc   = "true"
-#  prov = "aws"
-
 }
 
+module "peer-vpc-app" {
+  source = "modules/peer/inter/"
+
+  providers = {
+    aws = "aws"
+  }
+
+  # requester
+  vpc_id          = "${aws_vpc.dmz_vpc.id}"
+  peer_vpc_id     = "${module.app-vpc.vpc_app_id}"
+  peer_owner_id   = "${data.aws_caller_identity.app.account_id}"
+  auto_accept_req = "true"
+
+  #Accepter
+  auto_accept_acc = "true"
+
+  #  prov = "aws"
+}

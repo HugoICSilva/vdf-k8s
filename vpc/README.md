@@ -30,9 +30,9 @@ All documentation is available on the [Terraform website](http://www.terraform.i
   - [Intro](https://www.terraform.io/intro/index.html)
   - [Docs](https://www.terraform.io/docs/index.html)
 
-# AWS Terraform
+# AWS VDF DE ETO Terraform
 
-## This project is maintained by Hugo Silva.
+## This project is maintained by Celfocus Environments Team.
 
 ```hcl
 
@@ -46,11 +46,11 @@ Default region name [None]: region in use
 Default output format [None]: nothing
 
 Change ~/.aws/config
-[profile Auto_*******]
+[profile Auto_CelFocus]
 region = eu-central-1
 
 Change ~/.aws/credentials
-[Auto_*******]
+[Auto_CelFocus]
 aws_access_key_id = "ID from file"
 aws_secret_access_key = "key from file"
 
@@ -66,6 +66,9 @@ The final step is to make sure that the terraform binary is available on the PAT
 
 
 Terraform main.tf which creates VPC resources on AWS.
+
+![Optional Text](../Design/VDF-TEST_10v8.jpg)
+
 
 These resources are created:
 

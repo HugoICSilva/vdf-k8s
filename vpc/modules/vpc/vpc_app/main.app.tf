@@ -61,10 +61,10 @@ resource "aws_default_route_table" "app_private_rt" {
     nat_gateway_id = "${aws_nat_gateway.nat.id}"
   }
 
-#  route {
-#    cidr_block                = "${var.app_cidr}"
-#    vpc_peering_connection_id = "${var.peer_rt}"
-#  }
+  #  route {
+  #    cidr_block                = "${var.app_cidr}"
+  #    vpc_peering_connection_id = "${var.peer_rt}"
+  #  }
 
   tags {
     Name = "app_private"

@@ -6,6 +6,7 @@ variable "aws_profile" {
   type    = "string"
   default = "Auto_CelFocus_prod"
 }
+
 variable "aws_region" {
   type    = "string"
   default = "eu-central-1"
@@ -15,6 +16,7 @@ variable "aws_profile1" {
   type    = "string"
   default = "Auto_CelFocus_prod"
 }
+
 variable "aws_region1" {
   type    = "string"
   default = "eu-central-1"
@@ -100,6 +102,9 @@ variable "privIPs" {
     worker03 = "10.233.106.101"
   }
 }
+
 #-------------> Peer
 
+
 #variable "peer_rt" {}
+

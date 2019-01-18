@@ -13,7 +13,6 @@ variable "vpc_id" {
   type        = "string"
 }
 
-
 variable "auto_accept_req" {
   description = " Main VPC ID"
   type        = "string"
