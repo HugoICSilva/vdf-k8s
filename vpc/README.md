@@ -30,9 +30,9 @@ All documentation is available on the [Terraform website](http://www.terraform.i
   - [Intro](https://www.terraform.io/intro/index.html)
   - [Docs](https://www.terraform.io/docs/index.html)
 
-# AWS VDF DE ETO Terraform
+# AWS DE ETO Terraform
 
-## This project is maintained by Celfocus Environments Team.
+## This project is maintained by Hugo Silva.
 
 ```hcl
 
@@ -84,10 +84,10 @@ For NO-PROD we will have also ROOT53, Shild, WAF and a White List for operations
 
  
 
-### What connectivity’s we will have between Tooling VPC and PROD VPC?
+### What connectivityâ€™s we will have between Tooling VPC and PROD VPC?
 
 - Connectivity from the PROD Docker DTR to the tooling Docker DTR (unidirectional)
-- Connectivity from the Bastion (SSH) that is located on tooling VPC (in a DMZ isolated from the tooling and NOPROD environment), to the PROD kubernetes Managers and workers (this access it’s important for the Operation Team)
+- Connectivity from the Bastion (SSH) that is located on tooling VPC (in a DMZ isolated from the tooling and NOPROD environment), to the PROD kubernetes Managers and workers (this access itâ€™s important for the Operation Team)
 - Connectivity from the Bastion (HTTPS) that is located on tooling VPC (in a DMZ isolated from the tooling and NOPROD environment), to the PROD kubernetes Managers dashboard.
  
 
@@ -145,70 +145,70 @@ These resources are created:
 
 ```hcl
 +-- Design
-¦   +-- VDF-TEST_10v8.jpg
+Â¦Â Â  +-- VDF-TEST_10v8.jpg
 +-- README.md
 +-- main.tf
 +-- modules
-¦   +-- EndPoints
-¦   ¦   +-- s3_tool_code.tf
-¦   ¦   +-- variables.tf
-¦   +-- IAM
-¦   ¦   +-- s3.tf
-¦   +-- ec2
-¦   ¦   +-- bastion
-¦   ¦   ¦   +-- ec2_bastion.tf
-¦   ¦   ¦   +-- inter-dns.txt
-¦   ¦   ¦   +-- user-bastDmz-data.txt
-¦   ¦   ¦   +-- user-bastProd-data.txt
-¦   ¦   ¦   +-- variables.tf
-¦   ¦   +-- worker
-¦   ¦       +-- docker_worker.tf
-¦   ¦       +-- dtr-data.txt
-¦   ¦       +-- master-data.txt
-¦   ¦       +-- outputs.tf
-¦   ¦       +-- variables.tf
-¦   ¦       +-- worker-data.txt
-¦   +-- elb
-¦   ¦   +-- elb_app
-¦   ¦   ¦   +-- elb_externel.tf
-¦   ¦   +-- elb_dtr
-¦   ¦   ¦   +-- elb_externel.tf
-¦   ¦   +-- elb_ucp
-¦   ¦       +-- elb_externel.tf
-¦   ¦       +-- output.elb.tf
-¦   ¦       +-- variables.tf
-¦   +-- peer
-¦   ¦   +-- cross
-¦   ¦   ¦   +-- cross.tf
-¦   ¦   ¦   +-- outputs_cross.tf
-¦   ¦   ¦   +-- variable.tf
-¦   ¦   +-- inter
-¦   ¦       +-- inter.tf
-¦   ¦       +-- outputs_inter.tf
-¦   ¦       +-- variable.tf
-¦   +-- route53
-¦   ¦   +-- routeBASE
-¦   ¦   ¦   +-- main.tf
-¦   ¦   ¦   +-- output.tf
-¦   ¦   ¦   +-- variable.tf
-¦   ¦   +-- route_UCP
-¦   ¦       +-- main.r53.tf
-¦   ¦       +-- output.r53.tf
-¦   ¦       +-- variable.tf
-¦   +-- s3Bucket
-¦   ¦   +-- s3_code.tf
-¦   ¦   +-- variables.tf
-¦   +-- vpc
-¦       +-- vpc_app
-¦       ¦   +-- main.app.tf
-¦       ¦   +-- outputs.app.tf
-¦       ¦   +-- terraform.tfvars
-¦       ¦   +-- variables.tf
-¦       +-- vpc_prod
-¦           +-- main.prod.tf
-¦           +-- outputs.prod.tf
-¦           +-- terraform.tfvars
-¦           +-- variables.tf
+Â¦Â Â  +-- EndPoints
+Â¦Â Â  Â¦Â Â  +-- s3_tool_code.tf
+Â¦Â Â  Â¦Â Â  +-- variables.tf
+Â¦Â Â  +-- IAM
+Â¦Â Â  Â¦Â Â  +-- s3.tf
+Â¦Â Â  +-- ec2
+Â¦Â Â  Â¦Â Â  +-- bastion
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- ec2_bastion.tf
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- inter-dns.txt
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- user-bastDmz-data.txt
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- user-bastProd-data.txt
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- variables.tf
+Â¦Â Â  Â¦Â Â  +-- worker
+Â¦Â Â  Â¦Â Â      +-- docker_worker.tf
+Â¦Â Â  Â¦Â Â      +-- dtr-data.txt
+Â¦Â Â  Â¦Â Â      +-- master-data.txt
+Â¦Â Â  Â¦Â Â      +-- outputs.tf
+Â¦Â Â  Â¦Â Â      +-- variables.tf
+Â¦Â Â  Â¦Â Â      +-- worker-data.txt
+Â¦Â Â  +-- elb
+Â¦Â Â  Â¦Â Â  +-- elb_app
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- elb_externel.tf
+Â¦Â Â  Â¦Â Â  +-- elb_dtr
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- elb_externel.tf
+Â¦Â Â  Â¦Â Â  +-- elb_ucp
+Â¦Â Â  Â¦Â Â      +-- elb_externel.tf
+Â¦Â Â  Â¦Â Â      +-- output.elb.tf
+Â¦Â Â  Â¦Â Â      +-- variables.tf
+Â¦Â Â  +-- peer
+Â¦Â Â  Â¦Â Â  +-- cross
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- cross.tf
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- outputs_cross.tf
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- variable.tf
+Â¦Â Â  Â¦Â Â  +-- inter
+Â¦Â Â  Â¦Â Â      +-- inter.tf
+Â¦Â Â  Â¦Â Â      +-- outputs_inter.tf
+Â¦Â Â  Â¦Â Â      +-- variable.tf
+Â¦Â Â  +-- route53
+Â¦Â Â  Â¦Â Â  +-- routeBASE
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- main.tf
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- output.tf
+Â¦Â Â  Â¦Â Â  Â¦Â Â  +-- variable.tf
+Â¦Â Â  Â¦Â Â  +-- route_UCP
+Â¦Â Â  Â¦Â Â      +-- main.r53.tf
+Â¦Â Â  Â¦Â Â      +-- output.r53.tf
+Â¦Â Â  Â¦Â Â      +-- variable.tf
+Â¦Â Â  +-- s3Bucket
+Â¦Â Â  Â¦Â Â  +-- s3_code.tf
+Â¦Â Â  Â¦Â Â  +-- variables.tf
+Â¦Â Â  +-- vpc
+Â¦Â Â      +-- vpc_app
+Â¦Â Â      Â¦Â Â  +-- main.app.tf
+Â¦Â Â      Â¦Â Â  +-- outputs.app.tf
+Â¦Â Â      Â¦Â Â  +-- terraform.tfvars
+Â¦Â Â      Â¦Â Â  +-- variables.tf
+Â¦Â Â      +-- vpc_prod
+Â¦Â Â          +-- main.prod.tf
+Â¦Â Â          +-- outputs.prod.tf
+Â¦Â Â          +-- terraform.tfvars
+Â¦Â Â          +-- variables.tf
 +-- outputs.tf
 +-- terraform.tfvars
 +-- variables.tf
@@ -218,8 +218,8 @@ These resources are created:
 
 | Name                      | Description                       | Type   | Default | Required |
 |---------------------------|-----------------------------------|:------:|:-------:|:--------:|
-| auth\_lista               | 1º Ip WhitList                    | list   | - 		 | yes |
-| auth\_lista2              | 2º Ip WhitList                    | list   | -		 | yes |
+| auth\_lista               | 1Âº Ip WhitList                    | list   | - 		 | yes |
+| auth\_lista2              | 2Âº Ip WhitList                    | list   | -		 | yes |
 | aws\_profile              | aws used profile                  | string | -		 | yes |
 | aws\_region               | used region                       | string | -		 | yes |
 | bastion\_ami              | AMI used in bastion               | string | -		 | yes |
